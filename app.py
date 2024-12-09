@@ -23,7 +23,7 @@ def process_chat(conversations, prompt_type, clean_sharegpt):
 def render_html(json_data, processed_chat):
     template_string = """<html>
 <head>
-        <title>LLM Benchmark Report for: {{ model }}</title>
+        <title>LLM Benchmark Report for: {{ model_name }}</title>
         <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet"> 
             <style>
         body {
@@ -83,11 +83,11 @@ def render_html(json_data, processed_chat):
     </style>
 </head>
 <body>
-    <h1>LLM Benchmark Report for: {{ model }}</h1>
+    <h1>LLM Benchmark Report for: {{ model_name }}</h1>
     
 <ul>
     <li><strong>Total Prompts:</strong> {{ total_prompts }}</li>
-    <li><strong>Model Name:</strong> {{ model }}</li>
+    <li><strong>Model Name:</strong> {{ model_name }}</li>
     <li><strong>Prompt Format:</strong> {{ prompt_format }}</li>
     <li><strong>Temperature:</strong> {{ temperature }}</li>
     <li><strong>Top P:</strong> {{ top_p }}</li>
@@ -116,13 +116,7 @@ def render_html(json_data, processed_chat):
     total_prompts = len(processed_chat)
     template = Template(template_string)
     rendered_template = template.render(
-        model=json_data["model_name"],
-        temperature=json_data["temperature"],
-        top_p=json_data["top_p"],
-        presence_penalty=json_data["presence_penalty"],
-        frequency_penalty=json_data["frequency_penalty"],
-        total_prompts=total_prompts,
-        chat = processed_chat
+        **json_data, total_prompts=total_prompts, chat=processed_chat
     )
     return rendered_template
 
